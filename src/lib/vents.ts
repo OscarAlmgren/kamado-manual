@@ -54,7 +54,8 @@ export const modeTemp = mid
 
 export function topLabel(open: number): string {
   if (open < 0.25) return 'Nästan stängd'
-  if (open < 0.75) return 'Halvöppen'
+  if (open < 0.6) return 'Halvöppen'
+  if (open < 0.9) return 'Mestadels öppen'
   return 'Helt öppen'
 }
 

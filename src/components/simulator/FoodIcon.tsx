@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { Beef, Bird, Bone, Drumstick, Fish, Ham, Hamburger } from 'lucide-react'
+import { Beef, Bird, Bone, Carrot, Croissant, Drumstick, Fish, Ham, Hamburger, Pizza } from 'lucide-react'
 import type { FoodKind } from '../../data/kamado'
 
 type IconProps = { className?: string }
@@ -48,6 +48,9 @@ export const foodMeta: Record<FoodKind, { Icon: ComponentType<IconProps>; color:
   ham: { Icon: Ham, color: 'text-rose-300' },
   burger: { Icon: Hamburger, color: 'text-orange-400' },
   sausage: { Icon: Sausage, color: 'text-rose-400' },
+  veg: { Icon: Carrot, color: 'text-lime-300' },
+  pizza: { Icon: Pizza, color: 'text-yellow-300' },
+  bread: { Icon: Croissant, color: 'text-amber-200' },
 }
 
 export default function FoodIcon({ kind, className = 'h-6 w-6' }: { kind: FoodKind; className?: string }) {

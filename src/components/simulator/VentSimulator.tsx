@@ -1,6 +1,6 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { RotateCcw, Thermometer, Timer, Wind } from 'lucide-react'
-import { TEMP_MAX, TEMP_MIN, modes, type Food, type Mode } from '../../data/kamado'
+import { TEMP_MAX, TEMP_MIN, modes, thermoZones, type Food, type Mode } from '../../data/kamado'
 import { bottomLabel, modeForTemp, modeForVents, modeTemp, topLabel, ventsForTemp, type Vents } from '../../lib/vents'
 import Callout from '../Callout'
 import BottomVent from './BottomVent'
@@ -28,6 +28,7 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
   const between = !override && !byTemp.inside
   const effectiveTemp = override ? modeTemp(mode) : temp
   const hue = 38 - 38 * Math.min(1, Math.max(0, (effectiveTemp - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)))
+  const zone = thermoZones.find((z) => effectiveTemp >= z.from && effectiveTemp < z.to) ?? thermoZones[thermoZones.length - 1]
 
   // Vald maträtt gäller bara så länge simulatorn står i rättens läge.
   const selectedFood = mode.foods.find((f) => foodKey(mode, f) === pickedFood) ?? null
@@ -42,7 +43,7 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
   return (
     <div className="space-y-4">
       {/* Lägesknappar */}
-      <div role="group" aria-label="Tillagningsläge" className="grid grid-cols-3 gap-2 md:gap-3">
+      <div role="group" aria-label="Tillagningsläge" className="grid grid-cols-3 gap-2 md:grid-cols-5 md:gap-3">
         {modes.map((m) => {
           const active = !override && byTemp.inside && byTemp.mode.id === m.id
           return (
@@ -55,6 +56,8 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
                 setTemp(modeStartTemp(m))
               }}
               className={`rounded-xl border px-3 py-2.5 text-left transition-colors md:px-4 md:py-3 ${
+                m.source === 'general' ? 'border-dashed' : ''
+              } ${
                 active ? 'border-ember-amber bg-ember-amber/10' : 'border-line bg-graphite hover:border-zinc-500'
               }`}
             >
@@ -63,6 +66,7 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
               <span className={`block text-xs font-semibold md:text-sm ${active ? 'text-ember-amber' : 'text-zinc-300'}`}>
                 {m.range[0]}–{m.range[1]} °C
               </span>
+              {m.source === 'general' && <span className="block text-[10px] italic text-muted">riktvärde</span>}
             </button>
           )
         })}
@@ -103,7 +107,22 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
                   setTemp(Number(e.target.value))
                 }}
               />
-              <div className="relative mt-3 h-6" aria-hidden="true">
+              {/* Termometerns färgzoner */}
+              <div className="relative mt-2 h-1.5 overflow-hidden rounded-full" aria-hidden="true">
+                {thermoZones.map((z) => (
+                  <div
+                    key={z.id}
+                    className="absolute inset-y-0 transition-opacity"
+                    style={{
+                      left: `${pct(z.from)}%`,
+                      width: `${pct(z.to) - pct(z.from)}%`,
+                      background: z.color,
+                      opacity: z.id === zone.id ? 1 : 0.45,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="relative mt-2 h-6" aria-hidden="true">
                 {modes.map((m) => (
                   <div
                     key={m.id}
@@ -117,6 +136,15 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
                 ))}
               </div>
             </div>
+
+            <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-muted" aria-label="Termometerns zoner, ungefärliga">
+              {thermoZones.map((z) => (
+                <li key={z.id} className={z.id === zone.id ? 'font-semibold text-ink' : ''}>
+                  <span className="mr-1 inline-block h-2 w-2 rounded-full align-baseline" style={{ background: z.color }} aria-hidden="true" />
+                  {z.label} {z.from === TEMP_MIN ? `≤ ${z.to}` : `${z.from}–${z.to}`}
+                </li>
+              ))}
+            </ul>
 
             <div className="mt-3 flex-1 rounded-2xl bg-graphite-2 p-4" aria-live="polite">
               {selectedFood ? (
@@ -186,6 +214,13 @@ export default function VentSimulator({ temp, setTemp, override, setOverride }: 
       {effectiveTemp > 230 && (
         <Callout kind="danger" title="Hög temperatur: öppna locket försiktigt">
           Glänta på locket 2–5 cm i några sekunder innan du öppnar helt, annars finns risk för bakdrag (backdraft) och flare-up.
+        </Callout>
+      )}
+
+      {mode.source === 'general' && (
+        <Callout kind="warning" title="Utanför manualens tabell">
+          Temperatur, tider och ventilinställningar för {mode.label} är allmänna riktvärden, inte ur din manual. Ventilöppningarna är uppskattade.
+          {effectiveTemp > 370 && ' Termometern visar bara upp till ≈ 425 °C (800 °F).'}
         </Callout>
       )}
 

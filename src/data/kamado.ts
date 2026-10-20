@@ -1,11 +1,15 @@
 // All text och data för manualen. Redigera här – komponenterna behöver inte ändras.
 
-export type FoodKind = 'beef' | 'pork' | 'ribs' | 'chicken' | 'drumstick' | 'turkey' | 'fish' | 'lamb' | 'ham' | 'burger' | 'sausage'
+export type FoodKind =
+  | 'beef' | 'pork' | 'ribs' | 'chicken' | 'drumstick' | 'turkey' | 'fish' | 'lamb' | 'ham' | 'burger' | 'sausage'
+  | 'veg' | 'pizza' | 'bread'
 
 export type Food = { name: string; sv: string; time: string; kind: FoodKind }
 
 export type Mode = {
-  id: 'slow' | 'grill' | 'sear'
+  id: 'slow' | 'grill' | 'hot' | 'sear' | 'extreme'
+  /** 'manual' = ur manualens tabell. 'general' = allmänt riktvärde som manualen inte anger. */
+  source: 'manual' | 'general'
   label: string
   sv: string
   range: [number, number]
@@ -18,11 +22,12 @@ export type Mode = {
 }
 
 export const TEMP_MIN = 100
-export const TEMP_MAX = 380
+export const TEMP_MAX = 430 // termometerns skalslut, 800 °F ≈ 427 °C
 
 export const modes: Mode[] = [
   {
     id: 'slow',
+    source: 'manual',
     label: 'Slow Cook / Smoke',
     sv: 'Lågtemperatur & rökning',
     range: [110, 135],
@@ -39,6 +44,7 @@ export const modes: Mode[] = [
   },
   {
     id: 'grill',
+    source: 'manual',
     label: 'Grill / Roast',
     sv: 'Grillning & ugnsstekning',
     range: [160, 180],
@@ -56,7 +62,25 @@ export const modes: Mode[] = [
     ],
   },
   {
+    id: 'hot',
+    source: 'general',
+    label: 'Hot Grill',
+    sv: 'Het grillning & rostning',
+    range: [200, 250],
+    topOpen: 0.75,
+    bottomOpen: 0.65,
+    summary: 'Mellan manualens Grill och Sear (termometerns Grilling-zon). Lufthålen mer öppna än vid Grill.',
+    foods: [
+      { name: 'Roasted vegetables', sv: 'Rostade grönsaker', time: '20–30 min', kind: 'veg' },
+      { name: 'Roasted potatoes', sv: 'Rostad potatis', time: '40–60 min', kind: 'veg' },
+      { name: 'Chicken wings', sv: 'Kycklingvingar', time: '30–40 min', kind: 'drumstick' },
+      { name: 'Flatbread', sv: 'Flatbröd', time: '3–6 min', kind: 'bread' },
+      { name: 'Pizza (stone)', sv: 'Pizza (pizzasten)', time: '8–12 min', kind: 'pizza' },
+    ],
+  },
+  {
     id: 'sear',
+    source: 'manual',
     label: 'Sear',
     sv: 'Bryning',
     range: [260, 370],
@@ -70,7 +94,34 @@ export const modes: Mode[] = [
       { name: 'Sausages', sv: 'Korv', time: '6–10 min', kind: 'sausage' },
     ],
   },
+  {
+    id: 'extreme',
+    source: 'general',
+    label: 'Extreme',
+    sv: 'Över manualens tabell',
+    range: [380, 430],
+    topOpen: 1,
+    bottomOpen: 1,
+    summary: 'Över manualens 370 °C, upp till termometerns skalslut. Lufthålen helt öppna. Kort tid och full uppmärksamhet.',
+    foods: [
+      { name: 'Neapolitan-style pizza', sv: 'Pizza i napolitansk stil', time: '1–3 min', kind: 'pizza' },
+      { name: 'Thick steak sear', sv: 'Tjock biff, hård bryning', time: '1–2 min per sida', kind: 'beef' },
+      { name: 'Naan', sv: 'Naan / flatbröd', time: '1–2 min', kind: 'bread' },
+    ],
+  },
 ]
+
+/**
+ * Termometerns färgzoner (SMOKING / BAKING / GRILLING / SEARING), avlästa från fotot av urtavlan.
+ * Gränserna är ungefärliga. Termometerns namn skiljer sig från manualens lägen:
+ * manualens Grill / Roast (160–180 °C) ligger i termometerns Baking-zon.
+ */
+export const thermoZones = [
+  { id: 'smoking', label: 'Smoking', sv: 'Rökning', from: TEMP_MIN, to: 130, color: '#bef264' },
+  { id: 'baking', label: 'Baking', sv: 'Bakning', from: 130, to: 200, color: '#fbbf24' },
+  { id: 'grilling', label: 'Grilling', sv: 'Grillning', from: 200, to: 265, color: '#fb7185' },
+  { id: 'searing', label: 'Searing', sv: 'Bryning', from: 265, to: TEMP_MAX, color: '#dc2626' },
+] as const
 
 export type Part = {
   n: number
@@ -240,6 +291,7 @@ export const specModels: SpecModel[] = [
       { label: 'Vikt', value: '73 kg' },
       { label: 'Tillagningsyta', value: 'Ø 46 cm' },
       { label: 'Max temperatur', value: '1000 °C' },
+      { label: 'Termometerns skala', value: 'upp till ≈ 425 °C (800 °F)' },
     ],
   },
 ]

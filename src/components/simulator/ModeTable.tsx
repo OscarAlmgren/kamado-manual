@@ -7,7 +7,7 @@ import TopVent from './TopVent'
 export default function ModeTable({ activeId }: { activeId?: string }) {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      {modes.map((m) => (
+      {modes.filter((m) => m.source === 'manual').map((m) => (
         <article
           key={m.id}
           className={`overflow-hidden rounded-2xl border bg-graphite ${activeId === m.id ? 'border-ember-amber' : 'border-line'}`}
