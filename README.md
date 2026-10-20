@@ -1,7 +1,7 @@
 # kamado-manual
 
-Interaktiv bruksanvisning för Kamado-grillar (på svenska): simulator för luftflöde och temperatur,
-sprängskiss över delarna, steg-för-steg-guider, underhåll och teknisk data.
+Interaktiv guide för Kamado-grillar (på svenska): simulator för luftflöde och temperatur med valbara
+maträtter, sprängskiss över delarna, steg-för-steg-guider, underhåll och teknisk data.
 
 **Live:** https://oscaralmgren.github.io/kamado-manual/
 

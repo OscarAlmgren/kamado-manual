@@ -1,6 +1,8 @@
 // All text och data för manualen. Redigera här – komponenterna behöver inte ändras.
 
-export type Food = { name: string; sv: string; time: string }
+export type FoodKind = 'beef' | 'pork' | 'ribs' | 'chicken' | 'drumstick' | 'turkey' | 'fish' | 'lamb' | 'ham' | 'burger' | 'sausage'
+
+export type Food = { name: string; sv: string; time: string; kind: FoodKind }
 
 export type Mode = {
   id: 'slow' | 'grill' | 'sear'
@@ -28,11 +30,11 @@ export const modes: Mode[] = [
     bottomOpen: 0.15,
     summary: 'Låg och jämn värme i många timmar. Båda lufthålen nästan stängda.',
     foods: [
-      { name: 'Beef Brisket', sv: 'Nötbrisket', time: '1 tim per kg' },
-      { name: 'Pulled Pork', sv: 'Pulled pork', time: '1 tim per kg' },
-      { name: 'Whole Chicken', sv: 'Hel kyckling', time: '3–4 tim' },
-      { name: 'Ribs', sv: 'Revbensspjäll', time: '3–5 tim' },
-      { name: 'Roasts', sv: 'Stekar', time: '9+ tim' },
+      { name: 'Beef Brisket', sv: 'Nötbrisket', time: '1 tim per kg', kind: 'beef' },
+      { name: 'Pulled Pork', sv: 'Pulled pork', time: '1 tim per kg', kind: 'pork' },
+      { name: 'Whole Chicken', sv: 'Hel kyckling', time: '3–4 tim', kind: 'chicken' },
+      { name: 'Ribs', sv: 'Revbensspjäll', time: '3–5 tim', kind: 'ribs' },
+      { name: 'Roasts', sv: 'Stekar', time: '9+ tim', kind: 'beef' },
     ],
   },
   {
@@ -44,13 +46,13 @@ export const modes: Mode[] = [
     bottomOpen: 0.35,
     summary: 'Som en utomhusugn. Lufthålen halvöppna för stabil medelvärme.',
     foods: [
-      { name: 'Fish', sv: 'Fisk', time: '15–20 min' },
-      { name: 'Pork Tenderloin', sv: 'Fläskfilé', time: '15–30 min' },
-      { name: 'Chicken Pieces', sv: 'Kycklingbitar', time: '30–45 min' },
-      { name: 'Whole Chicken', sv: 'Hel kyckling', time: '1–1,5 tim' },
-      { name: 'Leg of lamb', sv: 'Lammlägg', time: '3–4 tim' },
-      { name: 'Turkey', sv: 'Kalkon', time: '2–4 tim' },
-      { name: 'Ham', sv: 'Skinka', time: '2–5 tim' },
+      { name: 'Fish', sv: 'Fisk', time: '15–20 min', kind: 'fish' },
+      { name: 'Pork Tenderloin', sv: 'Fläskfilé', time: '15–30 min', kind: 'pork' },
+      { name: 'Chicken Pieces', sv: 'Kycklingbitar', time: '30–45 min', kind: 'drumstick' },
+      { name: 'Whole Chicken', sv: 'Hel kyckling', time: '1–1,5 tim', kind: 'chicken' },
+      { name: 'Leg of lamb', sv: 'Lammlägg', time: '3–4 tim', kind: 'lamb' },
+      { name: 'Turkey', sv: 'Kalkon', time: '2–4 tim', kind: 'turkey' },
+      { name: 'Ham', sv: 'Skinka', time: '2–5 tim', kind: 'ham' },
     ],
   },
   {
@@ -62,10 +64,10 @@ export const modes: Mode[] = [
     bottomOpen: 0.9,
     summary: 'Maximal värme för snabb, vacker stekyta. Lufthålen så gott som helt öppna.',
     foods: [
-      { name: 'Steak', sv: 'Biff', time: '5–8 min' },
-      { name: 'Pork Chops', sv: 'Fläskkotletter', time: '6–10 min' },
-      { name: 'Burgers', sv: 'Hamburgare', time: '6–10 min' },
-      { name: 'Sausages', sv: 'Korv', time: '6–10 min' },
+      { name: 'Steak', sv: 'Biff', time: '5–8 min', kind: 'beef' },
+      { name: 'Pork Chops', sv: 'Fläskkotletter', time: '6–10 min', kind: 'pork' },
+      { name: 'Burgers', sv: 'Hamburgare', time: '6–10 min', kind: 'burger' },
+      { name: 'Sausages', sv: 'Korv', time: '6–10 min', kind: 'sausage' },
     ],
   },
 ]

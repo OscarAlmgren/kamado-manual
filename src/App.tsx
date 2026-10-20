@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from 'react'
-import { ArrowDown } from 'lucide-react'
 import { modeTemp, modeForTemp, type Vents } from './lib/vents'
 import ExplodedView from './components/ExplodedView'
 import Guides from './components/Guides'
@@ -41,28 +40,14 @@ export default function App() {
       <Header />
 
       <main>
-        {/* Hero */}
-        <div className="relative overflow-hidden border-b border-line">
-          <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-[48rem] -translate-x-1/2 rounded-full bg-ember-orange/20 blur-3xl" aria-hidden="true" />
-          <div className="relative mx-auto max-w-6xl px-4 py-16 md:py-24">
-            <p className="text-sm font-semibold uppercase tracking-widest text-ember-amber">Interaktiv bruksanvisning</p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-extrabold tracking-tight md:text-6xl">
-              Behärska elden i din <span className="bg-gradient-to-r from-ember-amber to-ember-red bg-clip-text text-transparent">Kamado</span>
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg text-zinc-300">
-              Lär dig hur övre och nedre lufthål styr temperaturen, och få rätt inställning och tid för allt från långkok till bryning.
-            </p>
-            <a href="#simulator" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-ember-amber px-5 py-3 font-semibold text-coal transition-colors hover:bg-amber-400">
-              Prova simulatorn <ArrowDown className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-
-        <Section id="simulator" kicker="Luftflöde & temperatur" title="Ställ in lufthålen (Top Vent / Bottom Vent)">
+        <section id="simulator" aria-labelledby="simulator-h" className="mx-auto max-w-6xl px-4 pt-5 pb-14 md:pt-6 md:pb-20">
+          <h1 id="simulator-h" className="mb-3 text-2xl font-extrabold tracking-tight md:mb-4 md:text-3xl">
+            Ställ in lufthålen <span className="text-base font-medium text-muted md:text-lg">(Top Vent / Bottom Vent)</span>
+          </h1>
           <VentSimulator temp={temp} setTemp={setTemp} override={override} setOverride={setOverride} />
-          <h3 className="mt-14 mb-4 text-xl font-bold">Snabbtabell</h3>
+          <h2 className="mt-14 mb-4 text-xl font-bold">Snabbtabell</h2>
           <ModeTable activeId={activeId} />
-        </Section>
+        </section>
 
         <Section id="delar" kicker="Översikt" title="Grillens delar">
           <ExplodedView />
